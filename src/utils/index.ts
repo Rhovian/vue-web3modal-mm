@@ -41,32 +41,29 @@ const checkNetwork = async () => {
   }
 };
 
-export const connectWeb3 = async (isConnected: boolean) => {
-  if (isConnected) return;
+interface ConnectResult {
+  accounts: string[] | null;
+  provider: ethers.providers.Web3Provider | null;
+}
 
+export const connectWeb3 = async (): Promise<ConnectResult> => {
   const ethProvider = await detectEthereumProvider();
   const provider = new providers.Web3Provider(ethProvider!);
 
   if (provider) {
-    const { isUnlocked } = getEthereum()._metamask;
-
-    if (await isUnlocked()) {
-      try {
-        const accounts: string[] = await getEthereum().request({
-          method: "eth_requestAccounts",
-        });
-
-        await checkNetwork();
-
-        return [accounts, provider];
-      } catch (err) {
-        console.log(err);
-        return [null, null];
-      }
-    } else {
-      await getEthereum().request({
+    try {
+      const accounts: string[] = await getEthereum().request({
         method: "eth_requestAccounts",
       });
+
+      await checkNetwork();
+
+      return { accounts, provider };
+    } catch (err) {
+      console.log(err);
+      return { accounts: null, provider: null };
     }
+  } else {
+    return { accounts: null, provider: null };
   }
 };
