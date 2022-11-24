@@ -110,7 +110,7 @@ const connect = async () => {
 <template>
   <div id="connect-wrap">
     <button v-if="!store.isConnected" @click="connect">Connect</button>
-    <button v-if="store.isConnected" @click="connect">
+    <button v-if="store.isConnected">
       {{ store.activeAccount }}
     </button>
   </div>
