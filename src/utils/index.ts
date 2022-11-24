@@ -1,6 +1,19 @@
 import detectEthereumProvider from "@metamask/detect-provider";
 import { ethers, providers } from "ethers";
 import { ChainID } from "@/constants";
+import { CONTRACTS } from "@/constants";
+import { markRaw } from "vue";
+
+export const createContractInstance = (
+  contractName: string,
+  abi: any,
+  signer: providers.Web3Provider
+) => {
+  const config = CONTRACTS.filter((c) => c.network == Number(ChainID));
+
+  // @ts-ignore
+  return markRaw(new ethers.Contract(config[0][contractName], abi, signer));
+};
 
 const getEthereum = () => {
   // @ts-ignore

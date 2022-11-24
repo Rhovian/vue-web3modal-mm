@@ -1,11 +1,13 @@
-import { reactive } from "vue";
+import { markRaw, reactive } from "vue";
 import type { StoreInterface } from "@/models";
 import { connectWeb3 } from "@/utils";
+import { contractStore } from "./contracts";
 
 export const store: StoreInterface = reactive({
   isConnected: false,
   activeAccount: "",
   provider: null,
+  signer: null,
   connect: async () => {
     if (store.isConnected) return;
 
@@ -14,7 +16,9 @@ export const store: StoreInterface = reactive({
     if (accounts && provider) {
       store.isConnected = true;
       store.activeAccount = accounts[0];
-      store.provider = provider;
+      store.provider = markRaw(provider);
+      store.signer = markRaw(provider.getSigner());
+      contractStore.createContractInstance(store.signer);
     }
   },
 });
