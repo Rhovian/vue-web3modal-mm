@@ -36,7 +36,7 @@ export const connectWeb3 = async (): Promise<ConnectResult> => {
 - if successful, we return the list of accounts and provider (after checking that the network is the one we specify with ``checkNetwork`` method.)
 
 
-## Changing Network Configuraton
+### Changing Network Configuraton
 
 We want to the user to use a specific network for a project, such as Ethereum mainnet. We set this network in the ``constants/index`` folder, like so:
 
