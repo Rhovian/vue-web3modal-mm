@@ -1,46 +1,38 @@
 # web3-vue-scaffolding
 
-This template should help get you started developing with Vue 3 in Vite.
+This template should help get you started developing with Web3, Vue3, and Vite.
 
-## Recommended IDE Setup
+## Connecting to Web3
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+The logic for connecting to web3 is in the ``utils`` folder. The function is reproducued here:
 
-## Type Support for `.vue` Imports in TS
+```ts
+export const connectWeb3 = async (): Promise<ConnectResult> => {
+  const ethProvider = await detectEthereumProvider();
+  const provider = new providers.Web3Provider(ethProvider!);
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+  if (provider) {
+    try {
+      const accounts: string[] = await getEthereum().request({
+        method: "eth_requestAccounts",
+      });
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+      await checkNetwork();
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+      return { accounts, provider };
+    } catch (err) {
+      console.log(err);
+      return { accounts: null, provider: null };
+    }
+  } else {
+    return { accounts: null, provider: null };
+  }
+};
 ```
 
-### Compile and Hot-Reload for Development
+*Function explanation*
+<br>
+- First, it checks whether web3 is enabled in the clients browser with [detectEthereumProvider](https://github.com/MetaMask/detect-provider)
+- if there is a provider, we use a metamask [method](https://docs.metamask.io/guide/rpc-api.html#restricted-methods) ``eth_requestAccounts`` to prompt the user to connect our Dapp to metamask and retrieve the list of accounts a user has.
+- if successful, we return the list of accounts and provider (after checking that the network is the one we specify with ``checkNetwork`` method.)
 
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
