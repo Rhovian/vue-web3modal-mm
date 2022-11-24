@@ -117,7 +117,7 @@ const connect = async () => {
 </template>
 ```
 
-You can see that the function in the ``src/utils`` folder we have previously discussed is not called directly. Instead, it passes through our state management system. The system is intutive, and is found in ``src/store/index``. It's reproduced here:
+You can see that the function ``connectWeb3`` in the ``src/utils`` folder we have previously discussed is not called directly. Instead, it passes through our state management system. The system is intutive, and is found in ``src/store/index``. It's reproduced here:
 
 ```ts
 import { markRaw, reactive } from "vue";
