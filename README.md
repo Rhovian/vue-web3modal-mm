@@ -38,7 +38,7 @@ export const connectWeb3 = async (): Promise<ConnectResult> => {
 
 ### Changing Network Configuraton
 
-We want to the user to use a specific network for a project, such as Ethereum mainnet. We set this network in the ``constants/index`` folder, like so:
+We the user to use a specific network for a project, such as Ethereum mainnet. We set this network in the ``constants/index`` folder, like so:
 
 ```ts
 export const ChainID = import.meta.env.VITE_NETWORK_ID || "1";
