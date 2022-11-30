@@ -20,6 +20,14 @@ const getEthereum = () => {
   return window.ethereum;
 };
 
+export const connectProvider = () => {
+  const provider = getEthereum();
+
+  if (provider) {
+    return new ethers.providers.Web3Provider(provider);
+  }
+};
+
 const checkNetwork = async () => {
   const hex = "0x" + parseInt(ChainID).toString(16);
 

@@ -217,7 +217,46 @@ export const contractStore: ContractStoreInterface = reactive({
 This store will house all of our contracts, and showcases that we do not need a monolithic state management system, we can separate app logic into different stores!<br>
 The ``createContractInstance`` function calls the function by the same name, that we've defined above and in the ``utils`` folder, and assign that contract to the ``vrt`` field in the contract store. From here, contract functions can be called as regular, with the signer attached.
 
+## Read-only Contract Connection
 
+If our use case is simply to read the state of the blockchain, the first RPC we should attempt to use is an injected provider. We can check to see if the web browser supports web3 with the following function:
+
+```js
+// if window.ethereum is undefined, evm based web3 is not supported in the current browser
+const getEthereum = () => {
+  // @ts-ignore
+  return window.ethereum;
+};
+```
+
+If web3 is supported, then we can create a ``Web3Provider`` instance with it, like so:
+
+```js
+export const connectInjectedProvider = () => {
+  const provider = getEthereum();
+
+  if (provider) {
+    return new ethers.providers.Web3Provider(provider);
+  }
+};
+```
+
+This provider can then be used to instantiate contracts to query read only functions. This should be done as early as possible in the Apps lifecycle, for best UX results. In our scaffolding, this was implemented for the ``vrt`` contract in ``App.vue`` like so:
+
+```js
+import { RouterView } from "vue-router";
+import { onMounted } from "vue";
+import { connectInjectedProvider } from "./utils";
+import { contractStore } from "./store/contracts";
+
+onMounted(() => {
+  const provider = connectProvider();
+  if (provider) contractStore.createContractInstance(provider);
+  // else connect to infura
+});
+```
+
+If there is no provider, then the dapp should fall back to an Infura connection or a similar service. This can also happen in the mounted hook above, but ideally it should happen in the ``connectProvider`` function, such that it always returns a provider in the mounted hook.
 
 
 

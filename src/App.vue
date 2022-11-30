@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+import { onMounted } from "vue";
+import { connectProvider } from "./utils";
+import { contractStore } from "./store/contracts";
+
+onMounted(() => {
+  const provider = connectProvider();
+  if (provider) contractStore.createContractInstance(provider);
+});
 </script>
 
 <template>
