@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { store } from "@/store";
-
-const connect = async () => {
-  await store.connect();
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { web3modal } from "@/utils/web3Modal";
 </script>
-
 <template>
   <div id="connect-wrap">
-    <button v-if="!store.isConnected" @click="connect">Connect</button>
-    <button v-if="store.isConnected">
-      {{ store.activeAccount }}
-    </button>
+    <button @click="web3modal.openModal()">Connect</button>
   </div>
 </template>

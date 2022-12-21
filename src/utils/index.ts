@@ -21,7 +21,7 @@ const getEthereum = () => {
 };
 
 export const connectProvider = () => {
-  const provider = getEthereum();
+  const provider: any = getEthereum();
 
   if (provider) {
     return new ethers.providers.Web3Provider(provider);

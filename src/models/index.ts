@@ -1,3 +1,4 @@
+import type { Provider } from "@wagmi/core";
 import type { providers, Contract } from "ethers";
 
 export interface ContractStoreInterface {
@@ -7,8 +8,8 @@ export interface ContractStoreInterface {
 
 export interface StoreInterface {
   isConnected: boolean;
-  activeAccount: string | null;
-  provider: providers.Web3Provider | null;
+  activeAccount: `0x${string}` | undefined;
+  provider: Provider | null;
   signer: providers.JsonRpcSigner | null;
   connect: Function;
 }

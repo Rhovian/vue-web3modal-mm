@@ -1,24 +1,22 @@
 import { markRaw, reactive } from "vue";
 import type { StoreInterface } from "@/models";
-import { connectWeb3 } from "@/utils";
 import { contractStore } from "./contracts";
+import { fetchSigner, getProvider, getAccount } from "@wagmi/core";
 
 export const store: StoreInterface = reactive({
   isConnected: false,
-  activeAccount: "",
+  activeAccount: `0x${""}`,
   provider: null,
   signer: null,
   connect: async () => {
+    console.log("here", store.isConnected);
     if (store.isConnected) return;
 
-    const { accounts, provider } = await connectWeb3();
-
-    if (accounts && provider) {
-      store.isConnected = true;
-      store.activeAccount = accounts[0];
-      store.provider = markRaw(provider);
-      store.signer = markRaw(provider.getSigner());
-      contractStore.createContractInstance(store.signer);
-    }
+    store.isConnected = true;
+    store.provider = await getProvider();
+    store.activeAccount = await getAccount().address;
+    // @ts-ignore
+    store.signer = markRaw(await fetchSigner());
+    contractStore.createContractInstance(store.signer);
   },
 });
